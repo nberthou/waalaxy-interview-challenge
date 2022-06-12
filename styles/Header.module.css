@@ -1,0 +1,39 @@
+.header {
+    @apply w-full bg-white items-center flex;
+    height: 6em;
+}
+
+.logo {
+    @apply text-xl flex items-center;
+    margin-left: 9.375em;
+    font-family: Aquatico, Helvetica Neue, Helvetica, sans-serif;
+}
+
+.logo > span {
+    color: #00BA88;
+}
+
+.menu {
+    @apply flex items-center justify-between w-3/5;
+    margin-left: 5.5em;
+    
+}
+
+.menuItem {
+    cursor: pointer;
+    width: inherit;
+}
+
+.menuItem:hover {
+    text-decoration: underline;
+}
+
+.menuItemLabel {
+    margin-left: 1em;
+}
+
+.createButton {
+    @apply px-5 py-3 text-white rounded-xl flex justify-between font-bold;
+    background-color: #00BA88;
+    min-width: 13em;
+}
