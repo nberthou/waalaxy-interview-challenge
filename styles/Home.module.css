@@ -1,3 +1,15 @@
-.title {
-  @apply font-bold text-5xl;
+.searchContainer {
+  @apply flex w-full justify-between;
+}
+
+.searchInput {
+  @apply w-9/12 rounded-xl bg-transparent px-4 caret-[#00BA88] accent-[#00BA88];
+  border: 2px solid #D6D8E7;
+  background-color: rgba(252, 252, 252, 0.5)
+}
+
+.productsContainer {
+  @apply mt-12 grid grid-cols-4 gap-10 w-full pb-4;
+  width: 100%;
+  height: calc(100% - 6em);
 }

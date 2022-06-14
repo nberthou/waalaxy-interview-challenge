@@ -1,0 +1,58 @@
+.productCard {
+    @apply card p-3;
+    width: 15em;
+    max-height: 18em;
+    cursor: pointer;
+}
+
+.productImage {
+@apply rounded-2xl;
+height: 8.875em;
+width: 100%;
+}
+
+.productName {
+    font-weight: bold;
+}
+
+.productPrice {
+    color: #6E7191;
+}
+
+.productDescription {
+    @apply text-sm;
+    color: #6E7191;
+}
+
+.dummyCard {
+    @apply productCard;
+    cursor: default;
+}
+
+.dummyDiv {
+    @apply rounded-2xl;
+    background-color: #6E7191;
+    height: 1.5em;
+}
+
+.dummyImage {
+    @apply productImage;
+    background-color: #6E7191;
+}
+
+.dummyName {
+    @apply dummyDiv;
+    width: 6em;
+}
+
+.dummyPrice {
+    @apply dummyDiv;
+    width: 4em;
+}
+
+.dummyDescription {
+    @apply dummyDiv;
+    width: 100%;
+    height: 0.75em;
+    margin-bottom: 0.5em;
+}

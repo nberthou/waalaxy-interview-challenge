@@ -1,4 +1,4 @@
 .childrenContainer {
-    margin: 4.375em 9em 0 9em;
-    height: calc(100vh - 4.275em);
+    margin: 10.375em 9em 0 9em;
+    height: calc(100vh - 4.375em - 6em);
 }

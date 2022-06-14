@@ -1,6 +1,7 @@
 .header {
-    @apply w-full bg-white items-center flex;
+    @apply w-full bg-white items-center flex fixed top-0;
     height: 6em;
+    z-index: 3;
 }
 
 .logo {
@@ -20,12 +21,9 @@
 }
 
 .menuItem {
+    @apply hover:underline;
     cursor: pointer;
     width: inherit;
-}
-
-.menuItem:hover {
-    text-decoration: underline;
 }
 
 .menuItemLabel {
