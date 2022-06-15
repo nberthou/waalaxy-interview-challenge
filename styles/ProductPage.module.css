@@ -1,0 +1,30 @@
+.productContainer {
+  @apply flex justify-between;
+}
+
+.productImage {
+  @apply w-1/2;
+  border-radius: 2em;
+  aspect-ratio: 4/3;
+}
+
+.productDetails {
+  width: 45%;
+}
+
+.nameAndPrice {
+  @apply flex justify-between items-baseline;
+}
+
+.productName {
+  @apply font-bold;
+  font-size: 2em;
+}
+
+.productPrice {
+  font-size: 3em;
+}
+
+.tagsContainer {
+  @apply flex;
+}
