@@ -1,17 +1,9 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  MutableRefObject,
-  ChangeEvent,
-} from "react";
+import { useState, useEffect, useRef, KeyboardEvent, useCallback } from "react";
 import axios from "axios";
 import type { NextPage } from "next";
 import Head from "next/head";
 
 import { Product } from "types";
-import useInfiniteScroll from "utils/hooks/useInfiniteScroll";
 
 import Layout from "components/Layout/Layout";
 import ProductCard from "components/ProductCard/ProductCard";
@@ -25,46 +17,62 @@ const Home: NextPage = () => {
   const [startIndex, setStartIndex] = useState<number>(0);
   const [productsCount, setProductsCount] = useState<number>(0);
 
-  const getProducts = (index?: number = startIndex) => {
+  const getProducts = useCallback((index: number, search?: string) => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/products?start=${index}&count=8`)
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/products?start=${index}&count=8${
+          search ? `&search=${search}` : ""
+        }`
+      )
       .then((res) => {
-        setProducts((prev) => prev.concat(res.data.products));
+        setProducts((prev) =>
+          index === 0 ? res.data.products : [...prev, ...res.data.products]
+        );
         setProductsLoading(false);
         setProductsCount(res.data.count);
       });
-  };
+  }, []);
 
-  const handleObserver = (entries) => {
-    if (entries[0].isIntersecting) {
-      setStartIndex((prev) => {
-        getProducts(prev + 8);
-        return prev + 8;
-      });
-    }
-  };
+  const handleObserver = useCallback(
+    (entries: any[], test: string) => {
+      if (entries[0].isIntersecting) {
+        setStartIndex((prev) => {
+          getProducts(prev + 8, searchValue);
+          return prev + 8;
+        });
+      }
+    },
+    [searchValue, getProducts]
+  );
 
-  const searchProducts = (event: ChangeEvent<HTMLInputElement>) => {
+  const searchProducts = (event) => {
     setSearchValue(event.target.value);
+    getProducts(0, event.target.value);
   };
 
   const loadingRef = useRef(null);
 
   useEffect(() => {
-    getProducts();
+    getProducts(0);
   }, []);
 
-  useEffect(() => {
+  const testFunction = useCallback(() => {
+    const obsOptions = {
+      root: null,
+      threshold: [0, 1.0],
+    };
+    const observer = new IntersectionObserver(
+      (entries) => handleObserver(entries, searchValue),
+      obsOptions
+    );
     if (loadingRef?.current?.lastChild) {
-      const obsOptions = {
-        root: null,
-        threshold: [0, 1.0],
-      };
-
-      const observer = new IntersectionObserver(handleObserver, obsOptions);
       observer.observe(loadingRef?.current?.lastChild);
     }
-  }, [loadingRef.current]);
+  }, [searchValue, handleObserver]);
+
+  useEffect(() => {
+    testFunction();
+  }, [loadingRef?.current, searchValue]);
 
   const loadingCards = [];
   for (let i = 0; i < 8; i++) {
@@ -84,8 +92,8 @@ const Home: NextPage = () => {
           <input
             className={styles.searchInput}
             placeholder="Recherchez un produit"
-            onChange={(e) => searchProducts}
-            value={searchValue}
+            onChange={searchProducts}
+            // value={searchValue}
           />
         </div>
         <div
