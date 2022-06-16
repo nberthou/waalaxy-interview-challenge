@@ -1,0 +1,17 @@
+.card {
+  @apply rounded-2xl m-auto p-10;
+  width: 75%;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 2px solid #d6d8e7;
+}
+
+.headerLogo {
+  @apply p-3.5 w-12 h-12;
+  border-radius: 10px;
+  background-color: #00ba88;
+}
+
+.headerTitle {
+    @apply font-bold text-2xl;
+    line-height: 1.5em;
+}

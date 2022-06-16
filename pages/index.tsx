@@ -8,13 +8,13 @@ import { Product } from "types";
 import Layout from "components/Layout/Layout";
 import ProductCard from "components/ProductCard/ProductCard";
 
-import styles from "../styles/Home.module.css";
+import styles from "styles/Home.module.css";
 
 const Home: NextPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
+  const [_, setStartIndex] = useState<number>(0);
   const [productsLoading, setProductsLoading] = useState<boolean>(false);
-  const [startIndex, setStartIndex] = useState<number>(0);
   const [productsCount, setProductsCount] = useState<number>(0);
 
   const getProducts = useCallback((index: number, search?: string) => {

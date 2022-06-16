@@ -4,6 +4,8 @@ import { faCarrot, faHome } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "styles/Header.module.css";
 
+import Button from "components/Button/Button";
+
 const Header = () => {
   return (
     <div className={styles.header}>
@@ -27,10 +29,10 @@ const Header = () => {
           </div>
         </Link>
         <Link href="products/create">
-      <button className={styles.createButton}>
+      <Button className={styles.createButton}>
           <div>+</div>
           <div>Ajouter un produit</div>
-      </button>
+      </Button>
       </Link>
       </div>
     </div>

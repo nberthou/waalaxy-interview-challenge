@@ -1,37 +1,35 @@
 .header {
-    @apply w-full bg-white items-center flex fixed top-0;
-    height: 6em;
-    z-index: 3;
+  @apply w-full bg-white items-center flex fixed top-0;
+  height: 6em;
+  z-index: 3;
 }
 
 .logo {
-    @apply text-xl flex items-center;
-    margin-left: 9.375em;
-    font-family: Aquatico, Helvetica Neue, Helvetica, sans-serif;
+  @apply text-xl flex items-center;
+  margin-left: 9.375em;
+  font-family: Aquatico, Helvetica Neue, Helvetica, sans-serif;
 }
 
 .logo > span {
-    color: #00BA88;
+  color: #00ba88;
 }
 
 .menu {
-    @apply flex items-center justify-between w-3/5;
-    margin-left: 5.5em;
-    
+  @apply flex items-center justify-between w-3/5;
+  margin-left: 5.5em;
 }
 
 .menuItem {
-    @apply hover:underline;
-    cursor: pointer;
-    width: inherit;
+  @apply hover:underline;
+  cursor: pointer;
+  width: inherit;
 }
 
 .menuItemLabel {
-    margin-left: 1em;
+  margin-left: 1em;
 }
 
 .createButton {
-    @apply px-5 py-3 text-white rounded-xl flex justify-between font-bold;
-    background-color: #00BA88;
-    min-width: 13em;
+  /* @apply; */
+  min-width: 13em;
 }
