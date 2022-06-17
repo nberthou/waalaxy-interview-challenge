@@ -1,5 +1,6 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { NextPage } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,7 +15,10 @@ import Button from "components/Button/Button";
 import ProductCard from "components/ProductCard/ProductCard";
 import Link from "next/link";
 
-const ProductPage: NextPage = ({ allTags, similarProducts }) => {
+const ProductPage: NextPage<{ allTags: Tag[]; similarProducts: Product[] }> = ({
+  allTags,
+  similarProducts,
+}) => {
   const router = useRouter();
 
   const [product, setProduct] = useState<Product | null>(null);
@@ -38,6 +42,9 @@ const ProductPage: NextPage = ({ allTags, similarProducts }) => {
 
   return (
     <Layout>
+      <Head>
+        <title>{product?.name}</title>
+      </Head>
       <div className="flex justify-between">
         <img
           className={styles.productImage}
@@ -94,7 +101,6 @@ const ProductPage: NextPage = ({ allTags, similarProducts }) => {
 };
 
 ProductPage.getInitialProps = async (ctx) => {
-  console.log("ctx", ctx.query.id);
   const allTags = await getTagswithColors();
   const product = await axios
     .get(`${process.env.NEXT_PUBLIC_API_URL}/products/${ctx.query.id}`)
@@ -110,7 +116,11 @@ ProductPage.getInitialProps = async (ctx) => {
           .map((tag) => `&tags[]=${tag.name}`)
           .join("")}`
       )
-      .then((res) => res.data.products));
+      .then((res) =>
+        res.data.products.filter(
+          (product: Product) => product._id !== ctx.query.id
+        ).filter((_: never, ind: number) => ind < 3)
+      ));
 
   return { allTags, similarProducts };
 };

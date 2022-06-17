@@ -4,15 +4,6 @@ import axios from "axios";
 import { Tag } from "types";
 
 export const getRandomColor = () => {
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
-
-export const getRandomColorBis = () => {
   const r = Math.floor(Math.random() * 256);
   const g = Math.floor(Math.random() * 256);
   const b = Math.floor(Math.random() * 256);
@@ -31,7 +22,7 @@ export const getTagswithColors = async () => {
         ...new Set(res.data.products.map((p) => p.tags).flat()),
       ];
       return tagsArray.map((tag: string) => {
-        const { backgroundColor, fontColor } = getRandomColorBis();
+        const { backgroundColor, fontColor } = getRandomColor();
         return {
           name: tag,
           backgroundColor: backgroundColor,

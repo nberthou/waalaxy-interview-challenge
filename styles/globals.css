@@ -18,3 +18,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
+datalist {
+  background-color: red !important;
+}

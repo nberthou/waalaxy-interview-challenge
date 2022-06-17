@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCarrot, faHome } from "@fortawesome/free-solid-svg-icons";
+import { faCarrot, faHome, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "styles/Header.module.css";
 
@@ -29,11 +29,13 @@ const Header = () => {
           </div>
         </Link>
         <Link href="products/create">
-      <Button className={styles.createButton}>
-          <div>+</div>
-          <div>Ajouter un produit</div>
-      </Button>
-      </Link>
+          <Button className={styles.createButton}>
+            <div>
+              <FontAwesomeIcon icon={faPlus} />
+            </div>
+            <div>Ajouter un produit</div>
+          </Button>
+        </Link>
       </div>
     </div>
   );

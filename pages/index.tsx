@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, KeyboardEvent, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import type { NextPage } from "next";
 import Head from "next/head";

@@ -12,6 +12,37 @@
 }
 
 .headerTitle {
-    @apply font-bold text-2xl;
-    line-height: 1.5em;
+  @apply font-bold text-2xl;
+  line-height: 1.5em;
+}
+
+.input {
+  @apply w-full;
+  border: 2px solid #d6d8e7;
+  border-radius: 10px;
+  padding: 0.875em 1.25em;
+  background-color: white;
+}
+
+.label {
+  @apply text-sm font-semibold mb-1;
+}
+
+.textArea {
+  @apply input;
+  min-width: 5.5em;
+}
+
+.productTag {
+  @apply p-2 rounded-full text-sm mr-3 flex items-center cursor-pointer;
+  padding: 0.1875em 0.9375em;
+  /* min-width: 7em !important; */
+}
+
+.productTag p {
+  @apply mr-3 flex;
+}
+
+.tagsContainer {
+  @apply flex flex-wrap gap-y-2 mt-2;
 }
