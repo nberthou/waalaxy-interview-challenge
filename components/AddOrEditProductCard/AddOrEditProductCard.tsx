@@ -7,28 +7,81 @@ import { useRouter } from "next/router";
 import styles from "styles/AddOrEditProductCard.module.css";
 import { Product, Tag } from "types";
 import Button from "components/Button/Button";
-import { getRandomColor } from "utils";
+import { getRandomColor, getTagswithColors } from "utils";
 import axios from "axios";
 
-const AddOrEditProductCard: FC<{ product?: Product; allTags: Tag[] }> = ({
-  product,
-  allTags,
-}) => {
-  const formattedTags =
-    product &&
-    allTags.filter((tag: Tag) => (product?.tags || [])?.indexOf(tag.name) > -1);
+type FormValues = Omit<Product, "_id" | "createdAt" | "updatedAt" | "tags"> & {
+  tags: string;
+};
+
+type FormErrors = {
+  [Property in keyof FormValues]: string;
+};
+
+const AddOrEditProductCard: FC<{ product?: Product }> = ({ product }) => {
+  const formattedTags = product && getTagswithColors(product.tags);
+
+  const validateForm = (values: FormValues) => {
+    const errors: Partial<FormErrors> = {};
+
+    if (values.name.length < 3) {
+      errors.name = "Name must be 3 characters or more.";
+    } else if (values.name.length > 50) {
+      errors.name = "Name must be 50 characters or less.";
+    }
+
+    if (values.description.length < 3) {
+      errors.description = "Description must be 3 characters or more.";
+    } else if (values.description.length > 500) {
+      errors.description = "Description must be 500 characters or less.";
+    }
+
+    console.log("tags", values.tags, tags);
+
+    if (values.tags.length > 0 && values.tags.length < 3) {
+      errors.tags = "Tag must be 3 characters or more.";
+    } else if (values.tags.length > 0 && values.tags.length > 50) {
+      errors.tags = "Tag must be 50 characters or less.";
+    } else if (tags.find((tag) => tag.name === values.tags)) {
+      errors.tags = "Tag already exists.";
+    }
+    Object.keys(values)
+      .filter((value) => value !== "tags" && value !== "price")
+      .map((value) => {
+        console.log(values[value as keyof Omit<FormValues, "tags" | "price">]);
+        if (!values[value as keyof Omit<FormValues, "tags" | "price">]) {
+          errors[value as keyof Omit<FormValues, "tags" | "price">] =
+            "Field is required";
+        }
+      });
+
+    if (!tags.length && !values.tags.length) {
+      errors.tags = "There must be at least one tag";
+    }
+
+    return errors;
+  };
 
   const [tags, setTags] = useState<Tag[]>(formattedTags || []);
-  const [tagInput, setTagInput] = useState<string>("");
   const { push } = useRouter();
-  const { values, handleSubmit, handleChange } = useFormik({
+  const {
+    values,
+    handleSubmit,
+    handleChange,
+    errors,
+    setFieldValue,
+    touched,
+    handleBlur,
+    setErrors,
+  } = useFormik({
     initialValues: {
       name: product?.name || "",
       price: product?.price || 0,
       description: product?.description || "",
       image: product?.image || "",
-      tags: tags.map((tag) => tag.name),
+      tags: "",
     },
+    validate: validateForm,
     onSubmit: (values) => {
       const parameters = { ...values, tags: tags.map((tag) => tag.name) };
       if (product) {
@@ -72,7 +125,11 @@ const AddOrEditProductCard: FC<{ product?: Product; allTags: Tag[] }> = ({
               className={styles.input}
               value={values.name}
               onChange={handleChange}
+              onBlur={handleBlur}
             />
+            {errors.name && touched.name ? (
+              <div className={styles.errorMessage}>{errors.name}</div>
+            ) : null}
           </div>
           <div>
             <p className={styles.label}>Prix</p>
@@ -82,7 +139,11 @@ const AddOrEditProductCard: FC<{ product?: Product; allTags: Tag[] }> = ({
               className={styles.input}
               value={values.price}
               onChange={handleChange}
+              onBlur={handleBlur}
             />
+            {errors.price && touched.price ? (
+              <div className={styles.errorMessage}>{errors.price}</div>
+            ) : null}
           </div>
         </div>
         <div className="w-full my-2.5">
@@ -93,7 +154,11 @@ const AddOrEditProductCard: FC<{ product?: Product; allTags: Tag[] }> = ({
             rows={3}
             value={values.description}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
+          {errors.description && touched.description ? (
+            <div className={styles.errorMessage}>{errors.description}</div>
+          ) : null}
         </div>
         <div className="w-full my-2.5">
           <p className={styles.label}>Image</p>
@@ -102,7 +167,11 @@ const AddOrEditProductCard: FC<{ product?: Product; allTags: Tag[] }> = ({
             name="image"
             value={values.image}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
+          {touched.image && errors.image ? (
+            <div className={styles.errorMessage}>{errors.image}</div>
+          ) : null}
         </div>
         <div className="w-full my-2.5">
           <p className={styles.label}>Tags</p>
@@ -110,11 +179,12 @@ const AddOrEditProductCard: FC<{ product?: Product; allTags: Tag[] }> = ({
             placeholder="Write a tag and hit enter to add it."
             className={styles.input}
             name="tags"
-            value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
+            value={values.tags}
+            onChange={handleChange}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
+
                 const { backgroundColor, fontColor } = getRandomColor();
                 setTags((prev) => [
                   ...prev,
@@ -125,10 +195,14 @@ const AddOrEditProductCard: FC<{ product?: Product; allTags: Tag[] }> = ({
                     fontColor,
                   },
                 ]);
-                setTagInput("");
+                !errors.tags && setFieldValue("tags", "", true);
               }
             }}
+            // onBlur={handleBlur}
           />
+          {errors.tags ? (
+            <div className={styles.errorMessage}>{errors.tags}</div>
+          ) : null}
           <div className={styles.tagsContainer}>
             {tags.map((tag: Tag) => (
               <div

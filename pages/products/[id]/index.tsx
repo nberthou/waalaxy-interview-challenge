@@ -15,8 +15,7 @@ import Button from "components/Button/Button";
 import ProductCard from "components/ProductCard/ProductCard";
 import Link from "next/link";
 
-const ProductPage: NextPage<{ allTags: Tag[]; similarProducts: Product[] }> = ({
-  allTags,
+const ProductPage: NextPage<{ similarProducts: Product[] }> = ({
   similarProducts,
 }) => {
   const router = useRouter();
@@ -32,13 +31,13 @@ const ProductPage: NextPage<{ allTags: Tag[]; similarProducts: Product[] }> = ({
         });
   }, [router.query.id]);
 
-  const formattedTags = allTags.filter(
-    (tag: Tag) => product?.tags?.indexOf(tag.name) > -1
-  );
-  const formattedPrice = new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-  }).format(product?.price);
+  const formattedTags = product && getTagswithColors(product.tags);
+  const formattedPrice =
+    product &&
+    new Intl.NumberFormat("fr-FR", {
+      style: "currency",
+      currency: "EUR",
+    }).format(product?.price);
 
   return (
     <Layout>
@@ -56,8 +55,8 @@ const ProductPage: NextPage<{ allTags: Tag[]; similarProducts: Product[] }> = ({
             <h1 className={styles.productName}>{product?.name}</h1>
             <h2 className={styles.productPrice}>{formattedPrice}</h2>
           </div>
-          <div className="flex">
-            {formattedTags.map((tag: Tag) => (
+          <div className="flex flex-wrap gap-y-2">
+            {formattedTags?.map((tag: Tag) => (
               <div
                 className={styles.productTag}
                 key={tag.name}
@@ -76,7 +75,7 @@ const ProductPage: NextPage<{ allTags: Tag[]; similarProducts: Product[] }> = ({
               {product?.description}
             </div>
           </div>
-          <Link href={`/products/${product?._id}/edit`}>
+          <Link href={`${product?._id}/edit`}>
             <Button className={styles.editButton}>
               <FontAwesomeIcon icon={faPen} style={{ marginRight: "0.25em" }} />
               <span>Modifier</span>
@@ -101,13 +100,10 @@ const ProductPage: NextPage<{ allTags: Tag[]; similarProducts: Product[] }> = ({
 };
 
 ProductPage.getInitialProps = async (ctx) => {
-  const allTags = await getTagswithColors();
   const product = await axios
     .get(`${process.env.NEXT_PUBLIC_API_URL}/products/${ctx.query.id}`)
     .then((res) => res.data.product);
-  const formattedTags = allTags.filter(
-    (tag: Tag) => product?.tags?.indexOf(tag.name) > -1
-  );
+  const formattedTags = getTagswithColors(product?.tags);
   const similarProducts =
     formattedTags &&
     (await axios
@@ -117,12 +113,12 @@ ProductPage.getInitialProps = async (ctx) => {
           .join("")}`
       )
       .then((res) =>
-        res.data.products.filter(
-          (product: Product) => product._id !== ctx.query.id
-        ).filter((_: never, ind: number) => ind < 3)
+        res.data.products
+          .filter((product: Product) => product._id !== ctx.query.id)
+          .filter((_: never, ind: number) => ind < 3)
       ));
 
-  return { allTags, similarProducts };
+  return { similarProducts };
 };
 
 export default ProductPage;

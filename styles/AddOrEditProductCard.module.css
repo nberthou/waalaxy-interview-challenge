@@ -46,3 +46,8 @@
 .tagsContainer {
   @apply flex flex-wrap gap-y-2 mt-2;
 }
+
+.errorMessage {
+  @apply font-bold text-sm mt-2;
+  color: #B80F0A;
+}

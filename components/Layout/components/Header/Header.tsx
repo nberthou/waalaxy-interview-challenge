@@ -28,8 +28,8 @@ const Header = () => {
             <span className={styles.menuItemLabel}>Catalogue Produits</span>
           </div>
         </Link>
-        <Link href="products/create">
-          <Button className={styles.createButton}>
+        <Link href="/products/create">
+          <Button className={styles.createButton} >
             <div>
               <FontAwesomeIcon icon={faPlus} />
             </div>
